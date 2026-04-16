@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Efisiensi Anggaran WFH | Instansi Pemerintah</title>
-    <!-- Chart.js CDN Stabil -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Dashboard Efisiensi Anggaran WFH</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <style>
         * {
             margin: 0;
@@ -18,41 +13,32 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
-        /* Header Glassmorphism */
         .header {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 24px 32px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .header h1 {
-            background: linear-gradient(135deg, #fff, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 26px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            color: white;
+            font-size: 24px;
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
+            color: #ccc;
             margin-top: 8px;
         }
 
@@ -60,294 +46,130 @@
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 28px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .card-icon {
-            font-size: 28px;
-            margin-bottom: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            backdrop-filter: blur(10px);
         }
 
         .card-title {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 0.5px;
+            color: #aaa;
             margin-bottom: 8px;
         }
 
         .card-value {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: bold;
             color: white;
-            margin-bottom: 10px;
-        }
-
-        .card-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-
-        .badge-info {
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
         }
 
         /* Tabs */
         .tabs {
             display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .tab-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
+            border: none;
             padding: 10px 24px;
-            border-radius: 40px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tab-btn i {
-            font-size: 14px;
-        }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
             color: white;
+            font-size: 14px;
+            transition: 0.3s;
         }
 
         .tab-btn.active {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         /* Tab Content */
         .tab-content {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
             display: none;
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.4s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Chart Container - PENTING: beri tinggi tetap */
+        .chart-wrapper {
+            width: 100%;
+            height: 450px;
+            position: relative;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
         }
 
         /* Table */
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         th {
-            text-align: left;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 13px;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255,255,255,0.05);
         }
 
         .text-right {
             text-align: right;
         }
 
-        .efisiensi-badge {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #10b981;
-            display: inline-block;
-        }
-
-        /* Chart Container - FIXED */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 450px;
-        }
-
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* Detail Grid */
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 20px;
-        }
-
-        .dept-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .dept-card h4 {
-            color: white;
-            font-size: 16px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .komponen-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
-            font-size: 12px;
-        }
-
-        .komponen-label {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .komponen-value {
-            color: white;
-            font-weight: 500;
-        }
-
-        .hemat {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .total-item {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px solid rgba(102, 126, 234, 0.3);
-        }
-
         /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
-            margin-top: 28px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
+            color: #888;
+            font-size: 12px;
+            margin-top: 20px;
         }
 
-        /* Responsive */
-        @media (max-width: 1000px) {
+        @media (max-width: 700px) {
             .summary-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 12px;
-            }
-            .tab-btn {
-                padding: 8px 16px;
-                font-size: 11px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>
-                <i class="fas fa-chart-line"></i>
-                Dashboard Efisiensi Anggaran WFH
-            </h1>
-            <p>
-                <i class="fas fa-building"></i> Instansi Pemerintah | 
-                Periode WFH Integral (100% Work From Home) | 
-                <i class="fas fa-calendar"></i> Bulan Berjalan
-            </p>
+            <h1>📊 Dashboard Efisiensi Anggaran WFH</h1>
+            <p>Instansi Pemerintah | Periode WFH Integral (100% Work From Home)</p>
         </div>
 
-        <!-- Summary Cards -->
         <div class="summary-grid" id="summaryCards"></div>
 
-        <!-- Tabs -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="table">
-                <i class="fas fa-table"></i> Tabel Anggaran
-            </button>
-            <button class="tab-btn" data-tab="chart">
-                <i class="fas fa-chart-bar"></i> Grafik Perbandingan
-            </button>
-            <button class="tab-btn" data-tab="detail">
-                <i class="fas fa-microchip"></i> Detail Komponen
-            </button>
+            <button class="tab-btn active" data-tab="table">📋 Tabel Anggaran</button>
+            <button class="tab-btn" data-tab="chart">📈 Grafik Perbandingan</button>
+            <button class="tab-btn" data-tab="detail">🔍 Detail Komponen</button>
         </div>
 
-        <!-- Tab Table -->
         <div id="table" class="tab-content active">
-            <div class="table-wrapper">
+            <div style="overflow-x: auto;">
                 <table id="anggaranTable">
                     <thead>
                         <tr><th>Departemen</th><th class="text-right">Anggaran Awal</th><th class="text-right">Penghematan</th><th class="text-right">Realisasi</th><th class="text-right">Efisiensi</th></tr>
@@ -357,27 +179,24 @@
             </div>
         </div>
 
-        <!-- Tab Chart -->
         <div id="chart" class="tab-content">
-            <div class="chart-container">
-                <canvas id="efisiensiChart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
 
-        <!-- Tab Detail -->
         <div id="detail" class="tab-content">
-            <div id="detailContainer" class="detail-grid"></div>
+            <div id="detailContainer"></div>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
-            <i class="fas fa-lightbulb"></i> Estimasi efisiensi WFH integral: Listrik (70%), Air (80%), Kebersihan (90%), Snack/Kopi (95%), Transport (85%), ATK (75%)
+            📌 Efisiensi: Listrik (70%), Air (80%), Kebersihan (90%), Snack (95%), Transport (85%), ATK (75%)
         </div>
     </div>
 
     <script>
-        // ==================== DATA ====================
-        const departemenData = [
+        // Data
+        const dataDepartemen = [
             { nama: "Dinas Pendidikan", listrik: 12000000, air: 2500000, kebersihan: 3000000, snack: 1500000, transport: 4000000, atk: 2000000 },
             { nama: "Dinas Kesehatan", listrik: 18000000, air: 3000000, kebersihan: 4500000, snack: 2000000, transport: 5000000, atk: 2500000 },
             { nama: "Dinas PUPR", listrik: 15000000, air: 2800000, kebersihan: 3500000, snack: 1800000, transport: 4500000, atk: 2200000 },
@@ -385,72 +204,85 @@
             { nama: "Dinas Sosial", listrik: 10000000, air: 2000000, kebersihan: 2500000, snack: 1200000, transport: 3000000, atk: 1500000 }
         ];
 
-        const efisiensi = { listrik: 0.70, air: 0.80, kebersihan: 0.90, snack: 0.95, transport: 0.85, atk: 0.75 };
+        const efisiensiRate = { listrik: 0.70, air: 0.80, kebersihan: 0.90, snack: 0.95, transport: 0.85, atk: 0.75 };
 
-        // Helper Functions
-        function totalAwal(d) { return d.listrik + d.air + d.kebersihan + d.snack + d.transport + d.atk; }
-        function totalHemat(d) {
-            return (d.listrik * efisiensi.listrik) + (d.air * efisiensi.air) + (d.kebersihan * efisiensi.kebersihan) +
-                   (d.snack * efisiensi.snack) + (d.transport * efisiensi.transport) + (d.atk * efisiensi.atk);
+        function totalAwal(d) {
+            return d.listrik + d.air + d.kebersihan + d.snack + d.transport + d.atk;
         }
-        function realisasi(d) { return totalAwal(d) - totalHemat(d); }
-        function formatRp(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka); }
 
-        // ==================== RENDER SUMMARY ====================
+        function totalHemat(d) {
+            return (d.listrik * efisiensiRate.listrik) + (d.air * efisiensiRate.air) + 
+                   (d.kebersihan * efisiensiRate.kebersihan) + (d.snack * efisiensiRate.snack) + 
+                   (d.transport * efisiensiRate.transport) + (d.atk * efisiensiRate.atk);
+        }
+
+        function realisasi(d) {
+            return totalAwal(d) - totalHemat(d);
+        }
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        // Render Summary
         function renderSummary() {
             let totalAwalAll = 0, totalHematAll = 0;
-            departemenData.forEach(d => { totalAwalAll += totalAwal(d); totalHematAll += totalHemat(d); });
+            dataDepartemen.forEach(d => {
+                totalAwalAll += totalAwal(d);
+                totalHematAll += totalHemat(d);
+            });
             const persen = (totalHematAll / totalAwalAll) * 100;
 
-            const cards = [
-                { icon: "fa-coins", title: "Total Anggaran Awal", value: formatRp(totalAwalAll), badge: "Baseline", color: "#667eea" },
-                { icon: "fa-sack-dollar", title: "Total Penghematan", value: formatRp(totalHematAll), badge: "Efisiensi WFH", color: "#10b981" },
-                { icon: "fa-chart-simple", title: "Realisasi Anggaran", value: formatRp(totalAwalAll - totalHematAll), badge: "Setelah Efisiensi", color: "#f59e0b" },
-                { icon: "fa-gauge-high", title: "Persen Efisiensi", value: persen.toFixed(2) + "%", badge: "Penghematan Signifikan", color: "#ef4444" }
-            ];
-
-            document.getElementById('summaryCards').innerHTML = cards.map(c => `
-                <div class="card">
-                    <div class="card-icon"><i class="fas ${c.icon}" style="color: ${c.color}"></i></div>
-                    <div class="card-title">${c.title}</div>
-                    <div class="card-value">${c.value}</div>
-                    <span class="card-badge ${c.title.includes('Penghematan') || c.title.includes('Efisiensi') ? 'badge-success' : 'badge-info'}">${c.badge}</span>
-                </div>
-            `).join('');
+            document.getElementById('summaryCards').innerHTML = `
+                <div class="card"><div class="card-title">💰 Total Anggaran Awal</div><div class="card-value">${formatRupiah(totalAwalAll)}</div></div>
+                <div class="card"><div class="card-title">💚 Total Penghematan</div><div class="card-value">${formatRupiah(totalHematAll)}</div></div>
+                <div class="card"><div class="card-title">📋 Realisasi Anggaran</div><div class="card-value">${formatRupiah(totalAwalAll - totalHematAll)}</div></div>
+                <div class="card"><div class="card-title">✨ Persen Efisiensi</div><div class="card-value">${persen.toFixed(2)}%</div></div>
+            `;
         }
 
-        // ==================== RENDER TABLE ====================
+        // Render Table
         function renderTable() {
-            document.getElementById('tableBody').innerHTML = departemenData.map(d => {
-                const awal = totalAwal(d), hemat = totalHemat(d), real = realisasi(d), persen = (hemat/awal)*100;
-                return `<tr>
-                    <td><i class="fas fa-building" style="color:#a78bfa; margin-right:8px"></i><strong>${d.nama}</strong></td>
-                    <td class="text-right">${formatRp(awal)}</td>
-                    <td class="text-right" style="color:#10b981">${formatRp(hemat)}</td>
-                    <td class="text-right">${formatRp(real)}</td>
-                    <td class="text-right"><span class="efisiensi-badge">${persen.toFixed(1)}%</span></td>
+            let html = '';
+            dataDepartemen.forEach(d => {
+                const awal = totalAwal(d);
+                const hemat = totalHemat(d);
+                const real = realisasi(d);
+                const persen = (hemat/awal)*100;
+                html += `<tr>
+                    <td><strong>${d.nama}</strong></td>
+                    <td class="text-right">${formatRupiah(awal)}</td>
+                    <td class="text-right" style="color:#4ade80">${formatRupiah(hemat)}</td>
+                    <td class="text-right">${formatRupiah(real)}</td>
+                    <td class="text-right"><span style="background:#166534; padding:4px 12px; border-radius:20px;">${persen.toFixed(1)}%</span></td>
                 </tr>`;
-            }).join('');
+            });
+            document.getElementById('tableBody').innerHTML = html;
         }
 
-        // ==================== RENDER CHART (FIXED) ====================
-        let chartGlobal = null;
+        // GLOBAL CHART VARIABLE
+        let chartInstance = null;
+
+        // Render Chart - DIPANGGIL SETELAH TAB AKTIF ATAU RESIZE
         function renderChart() {
-            const canvas = document.getElementById('efisiensiChart');
-            if (!canvas) return;
-            
-            // Destroy existing chart
-            if (chartGlobal) {
-                chartGlobal.destroy();
-                chartGlobal = null;
+            const canvas = document.getElementById('myChart');
+            if (!canvas) {
+                console.error("Canvas tidak ditemukan!");
+                return;
+            }
+
+            // Hancurkan chart lama jika ada
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
             }
 
             const ctx = canvas.getContext('2d');
-            const labels = departemenData.map(d => d.nama);
-            const awalData = departemenData.map(d => totalAwal(d));
-            const realData = departemenData.map(d => realisasi(d));
+            const labels = dataDepartemen.map(d => d.nama);
+            const awalData = dataDepartemen.map(d => totalAwal(d));
+            const realData = dataDepartemen.map(d => realisasi(d));
 
-            chartGlobal = new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -458,18 +290,18 @@
                         {
                             label: 'Anggaran Awal',
                             data: awalData,
-                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                            borderRadius: 8,
-                            barPercentage: 0.7,
-                            categoryPercentage: 0.8
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 8
                         },
                         {
                             label: 'Realisasi (Setelah WFH)',
                             data: realData,
-                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                            borderRadius: 8,
-                            barPercentage: 0.7,
-                            categoryPercentage: 0.8
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            borderRadius: 8
                         }
                     ]
                 },
@@ -477,94 +309,55 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: { color: 'white', font: { size: 12, weight: 'bold' }, usePointStyle: true }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + formatRp(context.raw);
-                                }
-                            },
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            titleColor: 'white',
-                            bodyColor: '#ddd'
-                        }
+                        legend: { position: 'top', labels: { color: 'white', font: { size: 12 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatRupiah(ctx.raw)}` } }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
                             grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { 
-                                color: 'white', 
-                                callback: function(val) { return formatRp(val); },
-                                stepSize: 10000000
-                            },
-                            title: { display: true, text: 'Jumlah (Rupiah)', color: 'white', font: { weight: 'bold' } }
+                            ticks: { color: 'white', callback: (val) => formatRupiah(val) },
+                            title: { display: true, text: 'Jumlah (Rupiah)', color: 'white' }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: 'white', font: { size: 11 } },
-                            title: { display: true, text: 'Departemen', color: 'white', font: { weight: 'bold' } }
+                            ticks: { color: 'white' },
+                            title: { display: true, text: 'Departemen', color: 'white' }
                         }
                     }
                 }
             });
+            console.log("Chart berhasil dibuat!");
         }
 
-        // ==================== RENDER DETAIL ====================
+        // Render Detail
         function renderDetail() {
-            const icons = ['fa-bolt', 'fa-droplet', 'fa-broom', 'fa-mug-hot', 'fa-bus', 'fa-pen-ruler'];
-            const komponenList = [
-                { key: 'listrik', label: 'Listrik', persen: 70, icon: 'fa-bolt' },
-                { key: 'air', label: 'Air', persen: 80, icon: 'fa-droplet' },
-                { key: 'kebersihan', label: 'Kebersihan', persen: 90, icon: 'fa-broom' },
-                { key: 'snack', label: 'Snack & Kopi', persen: 95, icon: 'fa-mug-hot' },
-                { key: 'transport', label: 'Transport Lokal', persen: 85, icon: 'fa-bus' },
-                { key: 'atk', label: 'ATK', persen: 75, icon: 'fa-pen-ruler' }
-            ];
-
-            document.getElementById('detailContainer').innerHTML = departemenData.map(dept => {
-                const items = komponenList.map(k => {
-                    const nilai = dept[k.key];
-                    const hematNilai = nilai * (k.persen / 100);
-                    return `
-                        <div class="komponen-item">
-                            <span class="komponen-label"><i class="fas ${k.icon}"></i> ${k.label}</span>
-                            <span class="komponen-value">${formatRp(nilai)}</span>
-                            <span class="hemat">→ Hemat ${k.persen}%: ${formatRp(hematNilai)}</span>
-                        </div>
-                    `;
-                }).join('');
-
-                const awal = totalAwal(dept);
-                const hemat = totalHemat(dept);
-                const real = realisasi(dept);
-                const persenEf = (hemat/awal)*100;
-
-                return `
-                    <div class="dept-card">
-                        <h4><i class="fas fa-landmark"></i> ${dept.nama}</h4>
-                        ${items}
-                        <div class="total-item">
-                            <div class="komponen-item">
-                                <span class="komponen-label"><strong>TOTAL ANGGARAN</strong></span>
-                                <span class="komponen-value"><strong>${formatRp(awal)}</strong></span>
-                                <span class="hemat"><strong>Hemat: ${formatRp(hemat)}</strong></span>
-                            </div>
-                            <div class="komponen-item">
-                                <span class="komponen-label"><strong>REALISASI AKHIR</strong></span>
-                                <span class="komponen-value" style="color:#10b981; font-size:14px"><strong>${formatRp(real)}</strong></span>
-                                <span class="hemat">Efisiensi ${persenEf.toFixed(1)}%</span>
-                            </div>
-                        </div>
+            let html = '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:15px;">';
+            dataDepartemen.forEach(d => {
+                const awal = totalAwal(d);
+                const hemat = totalHemat(d);
+                const real = realisasi(d);
+                const persen = (hemat/awal)*100;
+                html += `
+                    <div style="background:rgba(255,255,255,0.05); border-radius:16px; padding:15px;">
+                        <h3 style="color:white; margin-bottom:15px;">🏢 ${d.nama}</h3>
+                        <div style="font-size:13px; color:#ccc;">Listrik: ${formatRupiah(d.listrik)} → Hemat 70%: ${formatRupiah(d.listrik*0.7)}</div>
+                        <div style="font-size:13px; color:#ccc;">Air: ${formatRupiah(d.air)} → Hemat 80%: ${formatRupiah(d.air*0.8)}</div>
+                        <div style="font-size:13px; color:#ccc;">Kebersihan: ${formatRupiah(d.kebersihan)} → Hemat 90%: ${formatRupiah(d.kebersihan*0.9)}</div>
+                        <div style="font-size:13px; color:#ccc;">Snack: ${formatRupiah(d.snack)} → Hemat 95%: ${formatRupiah(d.snack*0.95)}</div>
+                        <div style="font-size:13px; color:#ccc;">Transport: ${formatRupiah(d.transport)} → Hemat 85%: ${formatRupiah(d.transport*0.85)}</div>
+                        <div style="font-size:13px; color:#ccc;">ATK: ${formatRupiah(d.atk)} → Hemat 75%: ${formatRupiah(d.atk*0.75)}</div>
+                        <hr style="border-color:rgba(255,255,255,0.1); margin:10px 0;">
+                        <div style="font-size:14px; color:#4ade80;"><strong>Total Hemat: ${formatRupiah(hemat)} (${persen.toFixed(1)}%)</strong></div>
+                        <div style="font-size:14px; color:white;"><strong>Realisasi Akhir: ${formatRupiah(real)}</strong></div>
                     </div>
                 `;
-            }).join('');
+            });
+            html += '</div>';
+            document.getElementById('detailContainer').innerHTML = html;
         }
 
-        // ==================== TAB SWITCHING ====================
+        // Tab Switching + Refresh Chart Saat Pindah Tab
         function initTabs() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -573,26 +366,34 @@
                     btn.classList.add('active');
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     document.getElementById(tabId).classList.add('active');
-                    
-                    // Fix chart resize when switching to chart tab
-                    if (tabId === 'chart' && chartGlobal) {
-                        setTimeout(() => chartGlobal.resize(), 100);
+
+                    // Jika tab chart yang aktif, render ulang chart
+                    if (tabId === 'chart') {
+                        setTimeout(() => {
+                            renderChart();
+                        }, 100);
                     }
                 });
             });
         }
 
-        // ==================== RESIZE HANDLER ====================
+        // Resize handler
         window.addEventListener('resize', () => {
-            if (chartGlobal) chartGlobal.resize();
+            if (chartInstance) {
+                chartInstance.resize();
+            }
         });
 
-        // ==================== INITIALIZE ====================
+        // Jalankan semua
         renderSummary();
         renderTable();
-        renderChart();
         renderDetail();
         initTabs();
+        
+        // Render chart pertama kali setelah halaman benar-benar siap
+        window.addEventListener('load', () => {
+            renderChart();
+        });
     </script>
 </body>
 </html>
