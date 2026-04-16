@@ -1,398 +1,48 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Efisiensi Anggaran WFH</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            color: white;
-            font-size: 24px;
-        }
-
-        .header p {
-            color: #ccc;
-            margin-top: 8px;
-        }
-
-        /* Summary Cards */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .card-title {
-            font-size: 12px;
-            color: #aaa;
-            margin-bottom: 8px;
-        }
-
-        .card-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 10px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            color: white;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        /* Tab Content */
-        .tab-content {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 20px;
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Chart Container - PENTING: beri tinggi tetap */
-        .chart-wrapper {
-            width: 100%;
-            height: 450px;
-            position: relative;
-        }
-
-        canvas {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: white;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        th {
-            background: rgba(255,255,255,0.05);
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #888;
-            font-size: 12px;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 700px) {
-            .summary-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+    <title>Kalkulus Lanjut</title>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Dashboard Efisiensi Anggaran WFH</h1>
-            <p>Instansi Pemerintah | Periode WFH Integral (100% Work From Home)</p>
-        </div>
+    <header>
+        <h1>Efisiensi Diri - Updated</h1> <!-- Completed header text -->
+    </header>
 
-        <div class="summary-grid" id="summaryCards"></div>
-
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="table">📋 Tabel Anggaran</button>
-            <button class="tab-btn" data-tab="chart">📈 Grafik Perbandingan</button>
-            <button class="tab-btn" data-tab="detail">🔍 Detail Komponen</button>
-        </div>
-
-        <div id="table" class="tab-content active">
-            <div style="overflow-x: auto;">
-                <table id="anggaranTable">
-                    <thead>
-                        <tr><th>Departemen</th><th class="text-right">Anggaran Awal</th><th class="text-right">Penghematan</th><th class="text-right">Realisasi</th><th class="text-right">Efisiensi</th></tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="chart" class="tab-content">
-            <div class="chart-wrapper">
-                <canvas id="myChart"></canvas>
-            </div>
-        </div>
-
-        <div id="detail" class="tab-content">
-            <div id="detailContainer"></div>
-        </div>
-
-        <div class="footer">
-            📌 Efisiensi: Listrik (70%), Air (80%), Kebersihan (90%), Snack (95%), Transport (85%), ATK (75%)
-        </div>
-    </div>
-
+    <canvas id="myChart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Data
-        const dataDepartemen = [
-            { nama: "Dinas Pendidikan", listrik: 12000000, air: 2500000, kebersihan: 3000000, snack: 1500000, transport: 4000000, atk: 2000000 },
-            { nama: "Dinas Kesehatan", listrik: 18000000, air: 3000000, kebersihan: 4500000, snack: 2000000, transport: 5000000, atk: 2500000 },
-            { nama: "Dinas PUPR", listrik: 15000000, air: 2800000, kebersihan: 3500000, snack: 1800000, transport: 4500000, atk: 2200000 },
-            { nama: "Kesekretariatan Daerah", listrik: 25000000, air: 5000000, kebersihan: 6000000, snack: 3000000, transport: 7000000, atk: 3500000 },
-            { nama: "Dinas Sosial", listrik: 10000000, air: 2000000, kebersihan: 2500000, snack: 1200000, transport: 3000000, atk: 1500000 }
-        ];
-
-        const efisiensiRate = { listrik: 0.70, air: 0.80, kebersihan: 0.90, snack: 0.95, transport: 0.85, atk: 0.75 };
-
-        function totalAwal(d) {
-            return d.listrik + d.air + d.kebersihan + d.snack + d.transport + d.atk;
-        }
-
-        function totalHemat(d) {
-            return (d.listrik * efisiensiRate.listrik) + (d.air * efisiensiRate.air) + 
-                   (d.kebersihan * efisiensiRate.kebersihan) + (d.snack * efisiensiRate.snack) + 
-                   (d.transport * efisiensiRate.transport) + (d.atk * efisiensiRate.atk);
-        }
-
-        function realisasi(d) {
-            return totalAwal(d) - totalHemat(d);
-        }
-
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
-        }
-
-        // Render Summary
-        function renderSummary() {
-            let totalAwalAll = 0, totalHematAll = 0;
-            dataDepartemen.forEach(d => {
-                totalAwalAll += totalAwal(d);
-                totalHematAll += totalHemat(d);
-            });
-            const persen = (totalHematAll / totalAwalAll) * 100;
-
-            document.getElementById('summaryCards').innerHTML = `
-                <div class="card"><div class="card-title">💰 Total Anggaran Awal</div><div class="card-value">${formatRupiah(totalAwalAll)}</div></div>
-                <div class="card"><div class="card-title">💚 Total Penghematan</div><div class="card-value">${formatRupiah(totalHematAll)}</div></div>
-                <div class="card"><div class="card-title">📋 Realisasi Anggaran</div><div class="card-value">${formatRupiah(totalAwalAll - totalHematAll)}</div></div>
-                <div class="card"><div class="card-title">✨ Persen Efisiensi</div><div class="card-value">${persen.toFixed(2)}%</div></div>
-            `;
-        }
-
-        // Render Table
-        function renderTable() {
-            let html = '';
-            dataDepartemen.forEach(d => {
-                const awal = totalAwal(d);
-                const hemat = totalHemat(d);
-                const real = realisasi(d);
-                const persen = (hemat/awal)*100;
-                html += `<tr>
-                    <td><strong>${d.nama}</strong></td>
-                    <td class="text-right">${formatRupiah(awal)}</td>
-                    <td class="text-right" style="color:#4ade80">${formatRupiah(hemat)}</td>
-                    <td class="text-right">${formatRupiah(real)}</td>
-                    <td class="text-right"><span style="background:#166534; padding:4px 12px; border-radius:20px;">${persen.toFixed(1)}%</span></td>
-                </tr>`;
-            });
-            document.getElementById('tableBody').innerHTML = html;
-        }
-
-        // GLOBAL CHART VARIABLE
-        let chartInstance = null;
-
-        // Render Chart - DIPANGGIL SETELAH TAB AKTIF ATAU RESIZE
-        function renderChart() {
-            const canvas = document.getElementById('myChart');
-            if (!canvas) {
-                console.error("Canvas tidak ditemukan!");
-                return;
-            }
-
-            // Hancurkan chart lama jika ada
-            if (chartInstance) {
-                chartInstance.destroy();
-                chartInstance = null;
-            }
-
-            const ctx = canvas.getContext('2d');
-            const labels = dataDepartemen.map(d => d.nama);
-            const awalData = dataDepartemen.map(d => totalAwal(d));
-            const realData = dataDepartemen.map(d => realisasi(d));
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Anggaran Awal',
-                            data: awalData,
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1,
-                            borderRadius: 8
-                        },
-                        {
-                            label: 'Realisasi (Setelah WFH)',
-                            data: realData,
-                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                            borderRadius: 8
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Sample Data',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Set to false for better chart rendering
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Months'
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { position: 'top', labels: { color: 'white', font: { size: 12 } } },
-                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${formatRupiah(ctx.raw)}` } }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: 'white', callback: (val) => formatRupiah(val) },
-                            title: { display: true, text: 'Jumlah (Rupiah)', color: 'white' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: 'white' },
-                            title: { display: true, text: 'Departemen', color: 'white' }
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Values'
                         }
                     }
                 }
-            });
-            console.log("Chart berhasil dibuat!");
-        }
-
-        // Render Detail
-        function renderDetail() {
-            let html = '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:15px;">';
-            dataDepartemen.forEach(d => {
-                const awal = totalAwal(d);
-                const hemat = totalHemat(d);
-                const real = realisasi(d);
-                const persen = (hemat/awal)*100;
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); border-radius:16px; padding:15px;">
-                        <h3 style="color:white; margin-bottom:15px;">🏢 ${d.nama}</h3>
-                        <div style="font-size:13px; color:#ccc;">Listrik: ${formatRupiah(d.listrik)} → Hemat 70%: ${formatRupiah(d.listrik*0.7)}</div>
-                        <div style="font-size:13px; color:#ccc;">Air: ${formatRupiah(d.air)} → Hemat 80%: ${formatRupiah(d.air*0.8)}</div>
-                        <div style="font-size:13px; color:#ccc;">Kebersihan: ${formatRupiah(d.kebersihan)} → Hemat 90%: ${formatRupiah(d.kebersihan*0.9)}</div>
-                        <div style="font-size:13px; color:#ccc;">Snack: ${formatRupiah(d.snack)} → Hemat 95%: ${formatRupiah(d.snack*0.95)}</div>
-                        <div style="font-size:13px; color:#ccc;">Transport: ${formatRupiah(d.transport)} → Hemat 85%: ${formatRupiah(d.transport*0.85)}</div>
-                        <div style="font-size:13px; color:#ccc;">ATK: ${formatRupiah(d.atk)} → Hemat 75%: ${formatRupiah(d.atk*0.75)}</div>
-                        <hr style="border-color:rgba(255,255,255,0.1); margin:10px 0;">
-                        <div style="font-size:14px; color:#4ade80;"><strong>Total Hemat: ${formatRupiah(hemat)} (${persen.toFixed(1)}%)</strong></div>
-                        <div style="font-size:14px; color:white;"><strong>Realisasi Akhir: ${formatRupiah(real)}</strong></div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            document.getElementById('detailContainer').innerHTML = html;
-        }
-
-        // Tab Switching + Refresh Chart Saat Pindah Tab
-        function initTabs() {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tabId = btn.getAttribute('data-tab');
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    document.getElementById(tabId).classList.add('active');
-
-                    // Jika tab chart yang aktif, render ulang chart
-                    if (tabId === 'chart') {
-                        setTimeout(() => {
-                            renderChart();
-                        }, 100);
-                    }
-                });
-            });
-        }
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            if (chartInstance) {
-                chartInstance.resize();
             }
-        });
-
-        // Jalankan semua
-        renderSummary();
-        renderTable();
-        renderDetail();
-        initTabs();
-        
-        // Render chart pertama kali setelah halaman benar-benar siap
-        window.addEventListener('load', () => {
-            renderChart();
         });
     </script>
 </body>
