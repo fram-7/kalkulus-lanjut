@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Efisiensi Anggaran WFH | Presisi & Akurat</title>
+    <title>Dashboard Efisiensi Anggaran WFH | Instansi Pemerintah</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
             min-height: 100vh;
             padding: 20px;
@@ -39,12 +39,17 @@
             background: linear-gradient(135deg, #ffffff, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             font-size: 24px;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .header h1 i {
+            background: none;
+            -webkit-text-fill-color: #a78bfa;
+            color: #a78bfa;
         }
 
         .header p {
@@ -79,35 +84,10 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .card-icon {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .card-title {
-            font-size: 12px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.6);
-            letter-spacing: 0.3px;
-            margin-bottom: 6px;
-        }
-
-        .card-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .card-badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 16px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
+        .card-icon { font-size: 28px; margin-bottom: 10px; }
+        .card-title { font-size: 12px; color: rgba(255, 255, 255, 0.6); margin-bottom: 6px; }
+        .card-value { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+        .card-badge { display: inline-block; padding: 3px 10px; border-radius: 16px; font-size: 10px; font-weight: 600; }
         .badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
         .badge-green { background: rgba(16, 185, 129, 0.2); color: #4ade80; }
         .badge-orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
@@ -134,6 +114,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
         }
 
         .tab-btn.active {
@@ -188,6 +173,10 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
         .text-right {
             text-align: right;
         }
@@ -202,14 +191,22 @@
             display: inline-block;
         }
 
-        /* Chart Container */
-        .chart-container {
-            position: relative;
+        /* Chart */
+        .chart-wrapper {
             width: 100%;
-            height: 420px;
+            min-height: 450px;
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        #efisiensiChart {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 450px;
         }
 
-        /* Detail Grid - PRESISI */
+        /* Detail */
         .detail-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -219,7 +216,6 @@
         .dept-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
-            padding: 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
             overflow: hidden;
             transition: all 0.3s ease;
@@ -232,13 +228,13 @@
 
         .dept-header {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
-            padding: 16px 20px;
+            padding: 14px 18px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .dept-header h4 {
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -247,63 +243,59 @@
 
         .dept-header h4 i {
             color: #a78bfa;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .komponen-list {
-            padding: 16px 20px;
+            padding: 14px 18px;
         }
 
         .komponen-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
         }
 
-        .komponen-item:last-of-type {
+        .komponen-item:last-child {
             border-bottom: none;
         }
 
         .komponen-label {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            min-width: 130px;
+            min-width: 120px;
         }
 
         .komponen-label i {
-            width: 20px;
-            font-size: 13px;
-        }
-
-        .komponen-nilai {
-            text-align: right;
-            min-width: 110px;
+            width: 18px;
+            font-size: 12px;
         }
 
         .nilai-awal {
             color: white;
             font-weight: 600;
-            font-size: 13px;
-            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            min-width: 110px;
+            text-align: right;
         }
 
         .hemat-detail {
-            text-align: right;
             color: #4ade80;
             font-weight: 600;
-            font-size: 12px;
-            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            min-width: 130px;
+            text-align: right;
         }
 
         .total-section {
             background: rgba(0, 0, 0, 0.3);
-            padding: 16px 20px;
+            padding: 14px 18px;
             border-top: 1px solid rgba(102, 126, 234, 0.3);
         }
 
@@ -311,41 +303,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 6px 0;
         }
 
         .total-label {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
         }
 
         .total-value {
             color: white;
             font-weight: 800;
-            font-size: 15px;
-            font-family: 'Courier New', monospace;
+            font-size: 13px;
         }
 
         .hemat-value {
             color: #4ade80;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .realisasi-value {
             color: #fbbf24;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .efisiensi-value {
             color: #4ade80;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             padding: 16px;
@@ -356,57 +346,37 @@
             border-radius: 18px;
         }
 
-        /* Monospace untuk angka */
-        .mono {
-            font-family: 'Courier New', 'Fira Code', monospace;
-            letter-spacing: 0.3px;
-        }
-
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .summary-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
             .detail-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 600px) {
+        @media (max-width: 640px) {
             .summary-grid { grid-template-columns: 1fr; }
             body { padding: 12px; }
             .tab-btn { padding: 6px 14px; font-size: 11px; }
             .komponen-label { min-width: 100px; font-size: 11px; }
-            .nilai-awal, .hemat-detail { font-size: 11px; }
+            .hemat-detail { min-width: 110px; font-size: 10px; }
+            .nilai-awal { min-width: 90px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>
-                <i class="fas fa-chart-line"></i>
-                Dashboard Efisiensi Anggaran WFH
-            </h1>
-            <p>
-                <i class="fas fa-building"></i> Instansi Pemerintah
-                <i class="fas fa-calendar-alt"></i> Periode WFH Integral (100%)
-                <i class="fas fa-chart-simple"></i> Estimasi Penghematan Bulanan
-            </p>
+            <h1><i class="fas fa-chart-line"></i> Dashboard Efisiensi Anggaran WFH</h1>
+            <p><i class="fas fa-building"></i> Instansi Pemerintah | Periode WFH Integral (100%) | Estimasi Penghematan Bulanan</p>
         </div>
 
-        <!-- Summary Cards -->
         <div class="summary-grid" id="summaryCards"></div>
 
-        <!-- Tabs -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="table">
-                <i class="fas fa-table"></i> Tabel Anggaran
-            </button>
-            <button class="tab-btn" data-tab="chart">
-                <i class="fas fa-chart-bar"></i> Grafik Perbandingan
-            </button>
-            <button class="tab-btn" data-tab="detail">
-                <i class="fas fa-microchip"></i> Detail Komponen
-            </button>
+            <button class="tab-btn active" data-tab="table"><i class="fas fa-table"></i> Tabel Anggaran</button>
+            <button class="tab-btn" data-tab="chart"><i class="fas fa-chart-bar"></i> Grafik Perbandingan</button>
+            <button class="tab-btn" data-tab="detail"><i class="fas fa-microchip"></i> Detail Komponen</button>
         </div>
 
-        <!-- Tab Table -->
         <div id="table" class="tab-content active">
             <div class="table-wrapper">
                 <table id="anggaranTable">
@@ -418,134 +388,71 @@
             </div>
         </div>
 
-        <!-- Tab Chart -->
         <div id="chart" class="tab-content">
-            <div class="chart-container">
-                <canvas id="efisiensiChart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="efisiensiChart" style="width:100%; height:auto; max-height:450px;"></canvas>
             </div>
         </div>
 
-        <!-- Tab Detail -->
         <div id="detail" class="tab-content">
             <div id="detailContainer" class="detail-grid"></div>
         </div>
 
-        <!-- Footer -->
         <div class="footer">
-            <i class="fas fa-lightbulb"></i> Estimasi efisiensi WFH integral: 
-            Listrik (70%) | Air (80%) | Kebersihan (90%) | Snack/Kopi (95%) | Transport Lokal (85%) | ATK (75%)
+            <i class="fas fa-lightbulb"></i> Estimasi efisiensi WFH integral: Listrik (70%) | Air (80%) | Kebersihan (90%) | Snack/Kopi (95%) | Transport Lokal (85%) | ATK (75%)
         </div>
     </div>
 
     <script>
         (function() {
-            // ==================== DATA PRESISI ====================
+            // ==================== DATA ====================
             const departemenData = [
-                { nama: "Dinas Pendidikan", listrik: 12_000_000, air: 2_500_000, kebersihan: 3_000_000, snack: 1_500_000, transport: 4_000_000, atk: 2_000_000 },
-                { nama: "Dinas Kesehatan", listrik: 18_000_000, air: 3_000_000, kebersihan: 4_500_000, snack: 2_000_000, transport: 5_000_000, atk: 2_500_000 },
-                { nama: "Dinas PUPR", listrik: 15_000_000, air: 2_800_000, kebersihan: 3_500_000, snack: 1_800_000, transport: 4_500_000, atk: 2_200_000 },
-                { nama: "Kesekretariatan Daerah", listrik: 25_000_000, air: 5_000_000, kebersihan: 6_000_000, snack: 3_000_000, transport: 7_000_000, atk: 3_500_000 },
-                { nama: "Dinas Sosial", listrik: 10_000_000, air: 2_000_000, kebersihan: 2_500_000, snack: 1_200_000, transport: 3_000_000, atk: 1_500_000 }
+                { nama: "Dinas Pendidikan", listrik: 12000000, air: 2500000, kebersihan: 3000000, snack: 1500000, transport: 4000000, atk: 2000000 },
+                { nama: "Dinas Kesehatan", listrik: 18000000, air: 3000000, kebersihan: 4500000, snack: 2000000, transport: 5000000, atk: 2500000 },
+                { nama: "Dinas PUPR", listrik: 15000000, air: 2800000, kebersihan: 3500000, snack: 1800000, transport: 4500000, atk: 2200000 },
+                { nama: "Kesekretariatan Daerah", listrik: 25000000, air: 5000000, kebersihan: 6000000, snack: 3000000, transport: 7000000, atk: 3500000 },
+                { nama: "Dinas Sosial", listrik: 10000000, air: 2000000, kebersihan: 2500000, snack: 1200000, transport: 3000000, atk: 1500000 }
             ];
 
-            // Persentase efisiensi presisi
-            const efisiensi = {
-                listrik: 0.70,   // 70%
-                air: 0.80,       // 80%
-                kebersihan: 0.90, // 90%
-                snack: 0.95,     // 95%
-                transport: 0.85, // 85%
-                atk: 0.75        // 75%
-            };
-
-            // Helper Functions
-            function totalAwal(d) {
-                return d.listrik + d.air + d.kebersihan + d.snack + d.transport + d.atk;
-            }
-
-            function totalHemat(d) {
-                return (d.listrik * efisiensi.listrik) + 
-                       (d.air * efisiensi.air) + 
-                       (d.kebersihan * efisiensi.kebersihan) + 
-                       (d.snack * efisiensi.snack) + 
-                       (d.transport * efisiensi.transport) + 
-                       (d.atk * efisiensi.atk);
-            }
-
-            function realisasi(d) {
-                return totalAwal(d) - totalHemat(d);
-            }
+            const efisiensi = { listrik: 0.70, air: 0.80, kebersihan: 0.90, snack: 0.95, transport: 0.85, atk: 0.75 };
 
             function formatRp(angka) {
-                return new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(angka);
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(angka);
             }
 
-            // Format dengan separator titik untuk presisi
-            function formatNumber(angka) {
-                return new Intl.NumberFormat('id-ID').format(angka);
-            }
+            function totalAwal(d) { return d.listrik + d.air + d.kebersihan + d.snack + d.transport + d.atk; }
+            function totalHemat(d) { return (d.listrik * efisiensi.listrik) + (d.air * efisiensi.air) + (d.kebersihan * efisiensi.kebersihan) + (d.snack * efisiensi.snack) + (d.transport * efisiensi.transport) + (d.atk * efisiensi.atk); }
+            function realisasi(d) { return totalAwal(d) - totalHemat(d); }
 
             // ==================== RENDER SUMMARY ====================
             function renderSummary() {
                 let totalAwalAll = 0, totalHematAll = 0;
-                departemenData.forEach(d => {
-                    totalAwalAll += totalAwal(d);
-                    totalHematAll += totalHemat(d);
-                });
-                const totalRealisasi = totalAwalAll - totalHematAll;
+                for (let i = 0; i < departemenData.length; i++) {
+                    totalAwalAll += totalAwal(departemenData[i]);
+                    totalHematAll += totalHemat(departemenData[i]);
+                }
+                const totalRealisasiAll = totalAwalAll - totalHematAll;
                 const persenEfisiensi = (totalHematAll / totalAwalAll) * 100;
-
+                
                 document.getElementById('summaryCards').innerHTML = `
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-coins" style="color: #60a5fa"></i></div>
-                        <div class="card-title">Total Anggaran Awal</div>
-                        <div class="card-value mono">${formatRp(totalAwalAll)}</div>
-                        <span class="card-badge badge-blue">Baseline Anggaran</span>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-sack-dollar" style="color: #4ade80"></i></div>
-                        <div class="card-title">Total Penghematan</div>
-                        <div class="card-value mono">${formatRp(totalHematAll)}</div>
-                        <span class="card-badge badge-green">Efisiensi WFH</span>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-chart-simple" style="color: #fbbf24"></i></div>
-                        <div class="card-title">Realisasi Anggaran</div>
-                        <div class="card-value mono">${formatRp(totalRealisasi)}</div>
-                        <span class="card-badge badge-orange">Setelah Efisiensi</span>
-                    </div>
-                    <div class="card">
-                        <div class="card-icon"><i class="fas fa-gauge-high" style="color: #f87171"></i></div>
-                        <div class="card-title">Persen Efisiensi</div>
-                        <div class="card-value">${persenEfisiensi.toFixed(2)}%</div>
-                        <span class="card-badge badge-red">Penghematan Signifikan</span>
-                    </div>
+                    <div class="card"><div class="card-icon"><i class="fas fa-coins" style="color:#60a5fa"></i></div><div class="card-title">Total Anggaran Awal</div><div class="card-value">${formatRp(totalAwalAll)}</div><span class="card-badge badge-blue">Baseline</span></div>
+                    <div class="card"><div class="card-icon"><i class="fas fa-sack-dollar" style="color:#4ade80"></i></div><div class="card-title">Total Penghematan</div><div class="card-value">${formatRp(totalHematAll)}</div><span class="card-badge badge-green">Efisiensi WFH</span></div>
+                    <div class="card"><div class="card-icon"><i class="fas fa-chart-simple" style="color:#fbbf24"></i></div><div class="card-title">Realisasi Anggaran</div><div class="card-value">${formatRp(totalRealisasiAll)}</div><span class="card-badge badge-orange">Setelah Efisiensi</span></div>
+                    <div class="card"><div class="card-icon"><i class="fas fa-gauge-high" style="color:#f87171"></i></div><div class="card-title">Persen Efisiensi</div><div class="card-value">${persenEfisiensi.toFixed(2)}%</div><span class="card-badge badge-red">Signifikan</span></div>
                 `;
             }
 
             // ==================== RENDER TABLE ====================
             function renderTable() {
                 let html = '';
-                departemenData.forEach(d => {
+                for (let i = 0; i < departemenData.length; i++) {
+                    const d = departemenData[i];
                     const awal = totalAwal(d);
                     const hemat = totalHemat(d);
                     const real = realisasi(d);
                     const persen = (hemat / awal) * 100;
-                    html += `
-                        <tr>
-                            <td><i class="fas fa-building" style="color: #a78bfa; margin-right: 8px;"></i><strong>${d.nama}</strong></td>
-                            <td class="text-right mono">${formatRp(awal)}</td>
-                            <td class="text-right mono" style="color: #4ade80;">${formatRp(hemat)}</td>
-                            <td class="text-right mono">${formatRp(real)}</td>
-                            <td class="text-right"><span class="efisiensi-badge">${persen.toFixed(1)}%</span></td>
-                        </tr>
-                    `;
-                });
+                    html += `<tr><td><i class="fas fa-building" style="color:#a78bfa; margin-right:8px;"></i><strong>${d.nama}</strong></td><td class="text-right">${formatRp(awal)}</td><td class="text-right" style="color:#4ade80;">${formatRp(hemat)}</td><td class="text-right">${formatRp(real)}</td><td class="text-right"><span class="efisiensi-badge">${persen.toFixed(1)}%</span></td></tr>`;
+                }
                 document.getElementById('tableBody').innerHTML = html;
             }
 
@@ -555,114 +462,50 @@
             function renderChart() {
                 const canvas = document.getElementById('efisiensiChart');
                 if (!canvas) return;
-
+                
                 if (chartInstance) {
                     chartInstance.destroy();
                     chartInstance = null;
                 }
 
-                const ctx = canvas.getContext('2d');
-                const labels = departemenData.map(d => d.nama);
-                const awalData = departemenData.map(d => totalAwal(d));
-                const realData = departemenData.map(d => realisasi(d));
+                const labels = [];
+                const awalData = [];
+                const realData = [];
+                
+                for (let i = 0; i < departemenData.length; i++) {
+                    const d = departemenData[i];
+                    labels.push(d.nama);
+                    awalData.push(totalAwal(d));
+                    realData.push(realisasi(d));
+                }
 
+                const ctx = canvas.getContext('2d');
                 chartInstance = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: labels,
                         datasets: [
-                            {
-                                label: 'Anggaran Awal',
-                                data: awalData,
-                                backgroundColor: 'rgba(96, 165, 250, 0.8)',
-                                borderColor: 'rgba(96, 165, 250, 1)',
-                                borderWidth: 1,
-                                borderRadius: 6,
-                                barPercentage: 0.6,
-                                categoryPercentage: 0.75
-                            },
-                            {
-                                label: 'Realisasi (Setelah WFH)',
-                                data: realData,
-                                backgroundColor: 'rgba(74, 222, 128, 0.8)',
-                                borderColor: 'rgba(74, 222, 128, 1)',
-                                borderWidth: 1,
-                                borderRadius: 6,
-                                barPercentage: 0.6,
-                                categoryPercentage: 0.75
-                            }
+                            { label: 'Anggaran Awal', data: awalData, backgroundColor: 'rgba(54, 162, 235, 0.8)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1, borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.8 },
+                            { label: 'Realisasi (Setelah WFH)', data: realData, backgroundColor: 'rgba(75, 192, 192, 0.8)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1, borderRadius: 6, barPercentage: 0.65, categoryPercentage: 0.8 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: true,
                         plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    color: 'white',
-                                    font: { size: 11, weight: 'bold' },
-                                    usePointStyle: true,
-                                    boxWidth: 10
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.dataset.label + ': ' + formatRp(context.raw);
-                                    }
-                                },
-                                backgroundColor: 'rgba(0,0,0,0.85)',
-                                titleColor: 'white',
-                                bodyColor: '#ddd',
-                                padding: 8,
-                                cornerRadius: 8
-                            }
+                            legend: { position: 'top', labels: { color: 'white', font: { size: 11, weight: 'bold' }, usePointStyle: true, boxWidth: 10 } },
+                            tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + formatRp(ctx.raw); } }, backgroundColor: 'rgba(0,0,0,0.85)', titleColor: 'white', bodyColor: '#ddd', padding: 8, cornerRadius: 8 }
                         },
                         scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 50000000,
-                                grid: { color: 'rgba(255, 255, 255, 0.08)' },
-                                ticks: {
-                                    color: 'white',
-                                    stepSize: 10000000,
-                                    callback: function(val) {
-                                        return formatRp(val);
-                                    },
-                                    font: { size: 10 }
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Jumlah (Rupiah)',
-                                    color: 'rgba(255,255,255,0.7)',
-                                    font: { size: 11, weight: 'bold' }
-                                }
-                            },
-                            x: {
-                                grid: { display: false },
-                                ticks: {
-                                    color: 'white',
-                                    font: { size: 10 },
-                                    maxRotation: 45,
-                                    minRotation: 45
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Departemen',
-                                    color: 'rgba(255,255,255,0.7)',
-                                    font: { size: 11, weight: 'bold' }
-                                }
-                            }
+                            y: { beginAtZero: true, max: 55000000, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'white', stepSize: 10000000, callback: function(val) { return formatRp(val); }, font: { size: 10 } }, title: { display: true, text: 'Jumlah (Rupiah)', color: 'rgba(255,255,255,0.7)', font: { size: 11, weight: 'bold' } } },
+                            x: { grid: { display: false }, ticks: { color: 'white', font: { size: 10 }, maxRotation: 35, minRotation: 35 }, title: { display: true, text: 'Departemen', color: 'rgba(255,255,255,0.7)', font: { size: 11, weight: 'bold' } } }
                         },
-                        layout: {
-                            padding: { top: 10, bottom: 10, left: 5, right: 5 }
-                        }
+                        layout: { padding: { top: 10, bottom: 20, left: 5, right: 5 } }
                     }
                 });
             }
 
-            // ==================== RENDER DETAIL PRESISI ====================
+            // ==================== RENDER DETAIL ====================
             function renderDetail() {
                 const komponenDetail = [
                     { key: 'listrik', label: 'Listrik', persen: 70, icon: 'fa-bolt', color: '#f59e0b' },
@@ -674,95 +517,50 @@
                 ];
 
                 let html = '';
-                departemenData.forEach(dept => {
-                    // Build komponen items
+                for (let i = 0; i < departemenData.length; i++) {
+                    const dept = departemenData[i];
                     let komponenHtml = '';
-                    komponenDetail.forEach(k => {
+                    for (let j = 0; j < komponenDetail.length; j++) {
+                        const k = komponenDetail[j];
                         const nilai = dept[k.key];
                         const hematNilai = nilai * (k.persen / 100);
-                        komponenHtml += `
-                            <div class="komponen-item">
-                                <div class="komponen-label">
-                                    <i class="fas ${k.icon}" style="color: ${k.color}"></i>
-                                    ${k.label}
-                                </div>
-                                <div class="komponen-nilai">
-                                    <div class="nilai-awal mono">${formatRp(nilai)}</div>
-                                </div>
-                                <div class="hemat-detail mono">→ Hemat ${k.persen}%: ${formatRp(hematNilai)}</div>
-                            </div>
-                        `;
-                    });
-
+                        komponenHtml += `<div class="komponen-item"><div class="komponen-label"><i class="fas ${k.icon}" style="color:${k.color}"></i> ${k.label}</div><div class="nilai-awal">${formatRp(nilai)}</div><div class="hemat-detail">→ Hemat ${k.persen}%: ${formatRp(hematNilai)}</div></div>`;
+                    }
                     const awal = totalAwal(dept);
                     const hemat = totalHemat(dept);
                     const real = realisasi(dept);
                     const persenEf = (hemat / awal) * 100;
-
-                    html += `
-                        <div class="dept-card">
-                            <div class="dept-header">
-                                <h4>
-                                    <i class="fas fa-landmark"></i>
-                                    ${dept.nama}
-                                </h4>
-                            </div>
-                            <div class="komponen-list">
-                                ${komponenHtml}
-                            </div>
-                            <div class="total-section">
-                                <div class="total-item">
-                                    <span class="total-label">TOTAL ANGGARAN</span>
-                                    <span class="total-value mono">${formatRp(awal)}</span>
-                                    <span class="hemat-value mono">Hemat: ${formatRp(hemat)}</span>
-                                </div>
-                                <div class="total-item">
-                                    <span class="total-label">REALISASI AKHIR</span>
-                                    <span class="realisasi-value mono">${formatRp(real)}</span>
-                                    <span class="efisiensi-value">Efisiensi ${persenEf.toFixed(1)}%</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
+                    html += `<div class="dept-card"><div class="dept-header"><h4><i class="fas fa-landmark"></i> ${dept.nama}</h4></div><div class="komponen-list">${komponenHtml}</div><div class="total-section"><div class="total-item"><span class="total-label">TOTAL ANGGARAN</span><span class="total-value">${formatRp(awal)}</span><span class="hemat-value">Hemat: ${formatRp(hemat)}</span></div><div class="total-item"><span class="total-label">REALISASI AKHIR</span><span class="realisasi-value">${formatRp(real)}</span><span class="efisiensi-value">Efisiensi ${persenEf.toFixed(1)}%</span></div></div></div>`;
+                }
                 document.getElementById('detailContainer').innerHTML = html;
             }
 
             // ==================== TAB & RESIZE ====================
             function initTabs() {
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const tabId = btn.getAttribute('data-tab');
-                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                const tabs = document.querySelectorAll('.tab-btn');
+                for (let i = 0; i < tabs.length; i++) {
+                    tabs[i].addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+                        for (let j = 0; j < tabs.length; j++) { tabs[j].classList.remove('active'); }
+                        this.classList.add('active');
+                        const contents = document.querySelectorAll('.tab-content');
+                        for (let j = 0; j < contents.length; j++) { contents[j].classList.remove('active'); }
                         document.getElementById(tabId).classList.add('active');
-                        
-                        if (tabId === 'chart') {
-                            setTimeout(() => { if (chartInstance) chartInstance.resize(); else renderChart(); }, 100);
-                        }
+                        if (tabId === 'chart' && chartInstance) { setTimeout(function() { chartInstance.resize(); }, 100); }
                     });
-                });
+                }
             }
 
-            window.addEventListener('resize', () => {
-                if (chartInstance) setTimeout(() => chartInstance.resize(), 100);
-            });
+            window.addEventListener('resize', function() { if (chartInstance) { setTimeout(function() { chartInstance.resize(); }, 100); } });
 
             // ==================== INIT ====================
-            function init() {
+            document.addEventListener('DOMContentLoaded', function() {
                 renderSummary();
                 renderTable();
                 renderDetail();
                 initTabs();
-                setTimeout(() => renderChart(), 150);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
+                setTimeout(function() { renderChart(); }, 200);
+            });
         })();
     </script>
 </body>
